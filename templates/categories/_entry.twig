@@ -30,9 +30,9 @@
 			<!-- immo card -->
 			<div class="col-12 col-sm-6 col-lg-4">
 				{% for house in houses %}
-					<a href="#" class="c-immo-card">
+					<a href="{{ house.url() }}" class="c-immo-card">
 						<div class="c-immo-card__imgcontainer">
-							<img src="{{url('img/houseOne.jpeg')}}" alt="" class="c-immo-card__img">
+							<img src="{{ house.cover.one().url() }}" alt="" class="c-immo-card__img">
 							<div class="c-immo-card__tag c-immo-card__tag--sale">
 								<p>For sale</p>
 							</div>
@@ -84,112 +84,26 @@
 			<h2 class="c-section__title">Locations</h2>
 			<p class="c-section__subtitle">Already found your ideal location?</p>
 
-			<div class="row justify-content-center c-section__content c-locations text-center">
-				<div class="col-12 col-sm-3 col-lg-2">
-					<ul class="c-locations__list">
-						<li class=" c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class=" c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Kortrijk
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Brussel
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Lokeren
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="col-12 col-sm-3 col-lg-2">
-					<ul class="c-locations__list">
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Antwerpen
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="u-hidden col-sm-3 col-lg-2">
-					<ul class="c-locations__list">
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="u-hidden col-sm-3 col-lg-2">
-					<ul class="c-locations__list">
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-						<li class="c-locations__list-item pb-2">
-
-							<a class="c-locations__link " href="#">
-								Gent
-							</a>
-						</li>
-					</ul>
-				</div>
-
+			{% set allLocations = craft.entries.section('locations').level(1).one() %}
+			<div
+				class="row justify-content-center c-section__content c-locations text-center">
+				<!-- todo: plak hier de categories vanuit templates/categories/index.twig -->
+				{% set locations = allLocations.children.all() %}
+				{% for location in locations %}
+					<div class="col-12 col-sm-3 col-lg-2">
+						<ul class="c-locations__list">
+							<h3>{{ location.title }}</h3>
+							{% set children = location.children.all() %}
+							{% for child in children %}
+								<li class=" c-locations__list-item pb-2">
+									<a class="c-locations__link " href="{{ child.url() }}">
+										{{ child.title }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endfor %}
 			</div>
 
 		</div>
