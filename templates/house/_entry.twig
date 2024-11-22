@@ -52,8 +52,9 @@
 					class="d-flex flex-row gap-2">
 					<!-- todo: voeg de category toe zorg dat deze ook linkt naar het overzicht van deze specifieke category -->
 
+					{% set category = craft.entries.section('categories').relatedTo(entry).one() %}
 					<p>
-						<a class="c-detail__tag" href="#">Apartment</a>
+						<a class="c-detail__tag" href="{{ category.url }}">{{ category.title }}</a>
 					</p>
 					<!-- Zorg dat de kleur van de tag veranderd d.m.v .c-detail__tag--rent toe te passen wanneer iets “for rent” staat. -->
 					<p>
@@ -62,12 +63,13 @@
 					</p>
 				</div>
 
+				{% set city = craft.entries.section('locations').relatedTo(entry).one() %}
 				<div class="c-detail__location">
 					<img src="{{url('img/icons/location.svg')}}" alt="">
 					<p>
 						{{entry.location}},
-						<a class="u-underline" href="#">
-							hier komt de stad</a>
+						<a class="u-underline" href="{{ city.url }}">
+							{{ city.title }}</a>
 					</p>
 
 				</div>
@@ -135,142 +137,64 @@
 	</div>
 
 	<!-- Homes for you -->
+	{% set cathome = craft.entries.section('categories').relatedTo(entry).all() %}
+	{% set houses = craft.entries.section('house').relatedTo(cathome).all() %}
+
 	<div class="container c-section c-section--alternate">
 		<h2 class="c-section__title">Homes For You</h2>
 		<p class="c-section__subtitle">Based on your interests.</p>
 
-
 		<div class="row g-3 justify-content-center c-section__content">
 			<!-- todo: Zorg dat de cards hier enkel huizen toont die gerelateerd zijn aan de category van de detail pagina. -->
 			<!-- immo card -->
-				<div class="col-12 col-sm-6 col-lg-4 "> <a href="#" class="c-immo-card">
-					<div class="c-immo-card__imgcontainer">
-						<img src="{{url('img/houseOne.jpeg')}}" alt="" class="c-immo-card__img">
-						<div class="c-immo-card__tag c-immo-card__tag--sale">
-							<p>For sale</p>
-						</div>
-
-					</div>
-					<div class="c-immo-card__infocontainer">
-						<div class="c-immo-card__heading">
-							<h3 class="c-immo-card__title">Skyper Pool Apartment</h3>
-							<p class="c-immo-card__price">$280.000</p>
-						</div>
-						<div class="c-immo-card__location">
-							<img src="{{url('img/icons/location.svg')}}" alt="">
-							<p>
-								1020 Bloomingdale Ave
-							</p>
-
-						</div>
-						<div class="c-immo-card__details">
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bed.svg')}}" alt="">
-								<p>4 beds
-								</p>
+				{% for house in houses %}
+					<div class="col-12 col-sm-6 col-lg-4 "> <a href="{{ house.url }}" class="c-immo-card">
+						<div class="c-immo-card__imgcontainer">
+							<img src="{{ house.cover.one().url() }}" alt="" class="c-immo-card__img">
+							<div class="c-immo-card__tag {{ house.state == 'sale' ? 'c-immo-card__tag--sale' : 'c-immo-card__tag--rent' }}">
+								<p>{{ house.state }}</p>
 							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bath.svg')}}" alt="">
-								<p>2 baths
-								</p>
-							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/sqf.svg')}}" alt="">
-								<p>70m²
-								</p>
-							</div>
-						</div>
-
-					</div>
-				</a>
-			</div>
-			<!-- immo card -->
-			<div class="col-12 col-sm-6 col-lg-4">
-				<a href="#" class="c-immo-card">
-					<div class="c-immo-card__imgcontainer">
-						<img src="{{url('img/houseOne.jpeg')}}" alt="" class="c-immo-card__img">
-						<div class="c-immo-card__tag c-immo-card__tag--sale">
-							<p>For sale</p>
-						</div>
-
-					</div>
-					<div class="c-immo-card__infocontainer">
-						<div class="c-immo-card__heading">
-							<h3 class="c-immo-card__title">Skyper Pool Apartment</h3>
-							<p class="c-immo-card__price">$280.000</p>
-						</div>
-						<div class="c-immo-card__location">
-							<img src="{{url('img/icons/location.svg')}}" alt="">
-							<p>
-								1020 Bloomingdale Ave
-							</p>
 
 						</div>
-						<div class="c-immo-card__details">
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bed.svg')}}" alt="">
-								<p>4 beds
-								</p>
+						<div class="c-immo-card__infocontainer">
+							<div class="c-immo-card__heading">
+								<h3 class="c-immo-card__title">{{ house.title }}</h3>
+								<p class="c-immo-card__price">{{ house.price|money }}</p>
 							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bath.svg')}}" alt="">
-								<p>2 baths
+							<div class="c-immo-card__location">
+								<img src="{{url('img/icons/location.svg')}}" alt="">
+								<p>
+									{{ house.location }}
 								</p>
-							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/sqf.svg')}}" alt="">
-								<p>70m²
-								</p>
-							</div>
-						</div>
 
-					</div>
-				</a>
-			</div>
-			<!-- immo card -->
-			<div class="col-12 col-sm-6 col-lg-4">
-				<a href="#" class="c-immo-card">
-					<div class="c-immo-card__imgcontainer">
-						<img src="{{url('img/houseOne.jpeg')}}" alt="" class="c-immo-card__img">
-						<div class="c-immo-card__tag c-immo-card__tag--rent">
-							<p>For rent</p>
-						</div>
+							</div>
 
-					</div>
-					<div class="c-immo-card__infocontainer">
-						<div class="c-immo-card__heading">
-							<h3 class="c-immo-card__title">Skyper Pool Apartment</h3>
-							<p class="c-immo-card__price">$280.000</p>
-						</div>
-						<div class="c-immo-card__location">
-							<img src="{{url('img/icons/location.svg')}}" alt="">
-							<p>
-								1020 Bloomingdale Ave
-							</p>
+							{% set details = house.details %}
+							{% set myTable = details %}
+							<div class="c-immo-card__details">
+								<div class="c-immo-card__icons">
+									<img src="{{url('img/icons/bed.svg')}}" alt="">
+									<p>{{ myTable[0].bedrooms }}
+										beds
+									</p>
+								</div>
+								<div class="c-immo-card__icons">
+									<img src="{{url('img/icons/bath.svg')}}" alt="">
+									<p>{{ myTable[0].bathrooms }}
+										baths
+									</p>
+								</div>
+								<div class="c-immo-card__icons">
+									<img src="{{url('img/icons/sqf.svg')}}" alt="">
+									<p>{{ myTable[0].size }}m²
+									</p>
+								</div>
+							</div>
 
 						</div>
-						<div class="c-immo-card__details">
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bed.svg')}}" alt="">
-								<p>4 beds
-								</p>
-							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/bath.svg')}}" alt="">
-								<p>2 baths
-								</p>
-							</div>
-							<div class="c-immo-card__icons">
-								<img src="{{url('img/icons/sqf.svg')}}" alt="">
-								<p>70m²
-								</p>
-							</div>
-						</div>
-
-					</div>
-				</a>
-			</div>
-
+					</a>
+				</div>
+			{% endfor %}
 		</div>
 
 	</div>
